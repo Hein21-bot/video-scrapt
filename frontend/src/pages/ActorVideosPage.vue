@@ -10,7 +10,7 @@
         </button>
         <RouterLink to="/" class="logo">
           <img src="/logo.png" class="logo-img" alt="ChitNya" width="36" height="36" />
-          ChitNya
+          <span class="logo-text">ChitNya</span>
         </RouterLink>
         <HeaderTools />
       </div>
@@ -170,7 +170,7 @@ onMounted(() => load(page.value))
 .actor-name { margin: 0; font-size: 1.35rem; font-weight: 700; color: var(--text); }
 .actor-sub { margin: 2px 0 0; font-size: .85rem; color: var(--text-3); }
 
-.video-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px 14px; }
+.video-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px 14px; }
 .skeleton-card { display: flex; flex-direction: column; gap: 8px; }
 .skeleton-thumb { aspect-ratio: 16/9; border-radius: 6px; background: linear-gradient(90deg,var(--surface) 25%,var(--surface-2) 50%,var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
 .skeleton-line { height: 10px; border-radius: 4px; background: linear-gradient(90deg,var(--surface) 25%,var(--surface-2) 50%,var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
@@ -188,7 +188,11 @@ onMounted(() => load(page.value))
 .nav-btn:disabled { opacity: .4; cursor: not-allowed; }
 .page-info { font-size: .82rem; color: var(--text-4); }
 
-@media (max-width: 1024px) { .video-grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 768px)  { .video-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 480px)  { .video-grid { grid-template-columns: repeat(2, 1fr); gap: 10px 8px; } }
+@media (max-width: 1024px) { .video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 768px)  { .video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 480px)  { .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; } }
+@media (max-width: 400px) {
+  .logo-text { display: none; }
+  .header-inner { padding: 0 12px; gap: 10px; }
+}
 </style>

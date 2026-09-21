@@ -11,7 +11,7 @@
         </button>
         <RouterLink to="/" class="logo">
           <img src="/logo.png" class="logo-img" alt="ChitNya" width="36" height="36" />
-          ChitNya
+          <span class="logo-text">ChitNya</span>
         </RouterLink>
         <HeaderTools />
       </div>
@@ -372,11 +372,12 @@ onMounted(fetchVideo)
 .main { max-width: 1400px; margin: 0 auto; padding: 20px 20px 80px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
 
 /* Watch layout */
-.watch-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+.watch-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
 
-.player-col { display: flex; flex-direction: column; gap: 0; }
+.player-col { display: flex; flex-direction: column; gap: 0; min-width: 0; }
 
-.player-wrap { background: #000; border-radius: 10px; overflow: hidden; }
+.video-title { overflow-wrap: anywhere; }
+.player-wrap { max-width: 100%; background: #000; border-radius: 10px; overflow: hidden; }
 
 .video-meta { padding: 16px 0 20px; display: flex; flex-direction: column; gap: 14px; }
 .video-title { margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--text); line-height: 1.4; }
@@ -434,7 +435,7 @@ onMounted(fetchVideo)
 
 /* Mobile */
 @media (max-width: 768px) {
-  .watch-layout { grid-template-columns: 1fr; }
+  .watch-layout { grid-template-columns: minmax(0, 1fr); }
   .sidebar { position: static; }
   .main { padding: 12px 12px 80px; }
 }
@@ -442,5 +443,9 @@ onMounted(fetchVideo)
 @media (max-width: 480px) {
   .header-inner { padding: 0 12px; gap: 12px; }
   .video-title { font-size: .95rem; }
+}
+@media (max-width: 400px) {
+  .logo-text { display: none; }
+  .header-inner { padding: 0 12px; gap: 10px; }
 }
 </style>

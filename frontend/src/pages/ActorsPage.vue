@@ -10,7 +10,7 @@
         </button>
         <RouterLink to="/" class="logo">
           <img src="/logo.png" class="logo-img" alt="ChitNya" width="36" height="36" />
-          ChitNya
+          <span class="logo-text">ChitNya</span>
         </RouterLink>
         <HeaderTools />
       </div>
@@ -141,7 +141,7 @@ onMounted(loadActors)
 .search-input { background: transparent; border: none; outline: none; color: var(--text); font-size: .875rem; flex: 1; min-width: 0; }
 .search-clear { background: none; border: none; color: var(--text-4); cursor: pointer; font-size: .9rem; }
 
-.actor-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px 14px; }
+.actor-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px 14px; }
 .actor-card { display: flex; flex-direction: column; gap: 8px; background: none; border: none; padding: 0; cursor: pointer; text-align: center; }
 .actor-thumb-wrap { position: relative; aspect-ratio: 3/4; border-radius: 8px; overflow: hidden; background: var(--surface); }
 .actor-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform .2s; }
@@ -158,7 +158,11 @@ onMounted(loadActors)
 
 .empty-state { display: flex; align-items: center; justify-content: center; min-height: 200px; color: var(--text-3); }
 
-@media (max-width: 1024px) { .actor-grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 720px)  { .actor-grid { grid-template-columns: repeat(3, 1fr); gap: 12px 10px; } }
-@media (max-width: 480px)  { .actor-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 1024px) { .actor-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 720px)  { .actor-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 10px; } }
+@media (max-width: 480px)  { .actor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 400px) {
+  .logo-text { display: none; }
+  .header-inner { padding: 0 12px; gap: 10px; }
+}
 </style>
