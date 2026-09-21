@@ -15,7 +15,7 @@
       <button
         :class="['q-btn', { active: selectedLevel === -1 }]"
         @click="setQuality(-1)"
-      >Auto</button>
+      >{{ t('player.auto') }}</button>
       <button
         v-for="(l, i) in qualityLevels"
         :key="i"
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { t } from '../utils/i18n'
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import Hls from 'hls.js'
 
@@ -90,7 +91,7 @@ function loadVideo() {
       })
       hlsInstance.on(Hls.Events.ERROR, (_evt, data) => {
         if (data.fatal) {
-          hlsError.value = `Playback error: ${data.details}`
+          hlsError.value = t('player.playbackError', { d: data.details })
           destroyHls()
           emit('error')
         }
@@ -99,7 +100,7 @@ function loadVideo() {
       video.src = props.url
       video.play().catch(() => {})
     } else {
-      hlsError.value = 'HLS is not supported in this browser.'
+      hlsError.value = t('player.noHls')
       emit('error')
     }
   } else {
@@ -151,19 +152,19 @@ iframe.video-el {
   display: flex;
   gap: 6px;
   padding: 8px 10px;
-  background: #0f172a;
+  background: var(--bg);
   flex-wrap: wrap;
 }
 .q-btn {
   padding: 3px 10px;
   border-radius: 4px;
-  border: 1px solid #334155;
+  border: 1px solid var(--border);
   background: transparent;
-  color: #94a3b8;
+  color: var(--text-3);
   font-size: .75rem;
   cursor: pointer;
   transition: all .15s;
 }
-.q-btn:hover { border-color: #6366f1; color: #f1f5f9; }
-.q-btn.active { background: #6366f1; border-color: #6366f1; color: #fff; }
+.q-btn:hover { border-color: var(--accent); color: var(--text); }
+.q-btn.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 </style>

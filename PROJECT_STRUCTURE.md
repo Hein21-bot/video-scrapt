@@ -157,6 +157,10 @@ session and video-host upload keys, which is exactly why it's never deployed.
 | `admin/` | ❌ your Mac only | `backend/cmd/admin` only |
 | `bridge/` | ❌ your Mac only | Telegram, video hosts, `backend/cmd/admin` |
 
+- **`keepalive-worker/`** — a tiny Cloudflare Worker (runs free, 24/7). Every 13 minutes it
+  pings the Render API so it never sleeps, and every Monday it "pins" every video uploaded
+  from Telegram so the free video hosts don't delete them for inactivity.
+
 Two more files worth knowing about:
 - **`run.sh`** (project root) — starts/stops all 5 pieces at once for local use.
 - **`Deploy.md`** (project root) — the step-by-step guide for putting the

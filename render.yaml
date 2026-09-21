@@ -22,3 +22,5 @@ services:
         sync: false
       - key: CORS_ORIGINS       # your Cloudflare Pages URL, e.g. https://nightmm.pages.dev
         sync: false
+      - key: KEEPALIVE_KEY      # any long random string; the Cloudflare keep-alive Worker uses the same value
+        sync: false

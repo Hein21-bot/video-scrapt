@@ -1,4 +1,4 @@
-# Deploy — NightMM (free hosting)
+# Deploy — ChitNya (free hosting)
 
 Step-by-step. Everything here is **$0/month**.
 
@@ -201,6 +201,10 @@ Save → Render redeploys automatically. Done — the public site is live.
 ---
 
 ## 7. Keep Render awake (free tier sleeps after 15 min idle)
+
+> **Better than UptimeRobot:** the project ships its own Cloudflare Worker that does this
+> *and* pins your Telegram-uploaded videos so the free video hosts never delete them.
+> See `keepalive-worker/README.md`. (UptimeRobot below still works if you prefer it.)
 
 1. <https://uptimerobot.com> → free account → **Add New Monitor**.
 2. Type: **HTTP(s)** · URL: `https://nightmm-api.onrender.com/health` ·

@@ -2,6 +2,11 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './style.css'
+import { initTheme } from './utils/theme'
+import { initLang } from './utils/i18n'
+
+initTheme()
+initLang()
 
 createApp(App).use(router).mount('#app')
 

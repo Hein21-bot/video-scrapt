@@ -1,12 +1,13 @@
 <template>
   <div :class="['ad-slot', `ad-slot--${size}`]">
-    <span class="ad-label">Advertisement</span>
+    <span class="ad-label">{{ t('ad.label') }}</span>
     <!-- Paste your ad network code (AdSense, etc.) inside this component's slot -->
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
+import { t } from '../utils/i18n'
 defineProps<{
   /**
    * leaderboard  → 728×90  (full-width horizontal bar)
@@ -19,13 +20,13 @@ defineProps<{
 
 <style scoped>
 .ad-slot {
-  background: #1e293b;
-  border: 1px dashed #334155;
+  background: var(--surface);
+  border: 1px dashed var(--border);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #475569;
+  color: var(--border-strong);
   font-size: .75rem;
   text-transform: uppercase;
   letter-spacing: .08em;

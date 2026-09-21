@@ -7,22 +7,17 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
             <path d="M19 12H5M12 5l-7 7 7 7"/>
           </svg>
-          Back
+          {{ t('common.back') }}
         </button>
         <RouterLink to="/" class="logo">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-            <path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>
-            <path fill="#6366f1" d="M10 9l5 3-5 3V9z"/>
-          </svg>
-          NightMM
+          <img src="/logo.png" class="logo-img" alt="ChitNya" width="36" height="36" />
+          ChitNya
         </RouterLink>
+        <HeaderTools />
       </div>
     </header>
 
     <main class="main">
-      <!-- ① Top native banner ad -->
-      <NativeBanner1 />
-
       <div class="watch-layout">
         <!-- ── Left: Player column ── -->
         <section class="player-col">
@@ -30,19 +25,19 @@
           <!-- Loading -->
           <div v-if="fetching" class="state-box">
             <div class="spinner-ring" />
-            <p>Fetching video…</p>
+            <p>{{ t('watch.fetching') }}</p>
           </div>
 
           <!-- No session (direct URL / new tab) -->
           <div v-else-if="!meta?.videoId" class="state-box error-box">
-            <p>Video session expired or link opened in a new tab.</p>
-            <RouterLink to="/" class="retry-btn" style="text-decoration:none;text-align:center">← Go to Home</RouterLink>
+            <p>{{ t('watch.sessionExpired') }}</p>
+            <RouterLink to="/" class="retry-btn" style="text-decoration:none;text-align:center">{{ t('watch.goHome') }}</RouterLink>
           </div>
 
           <!-- Error -->
           <div v-else-if="fetchError" class="state-box error-box">
             <p>{{ fetchError }}</p>
-            <button class="retry-btn" @click="fetchVideo">Retry</button>
+            <button class="retry-btn" @click="fetchVideo">{{ t('common.retry') }}</button>
           </div>
 
           <!-- Player -->
@@ -62,18 +57,18 @@
               <!-- Category / Actress / Tags -->
               <div v-if="hasTaxonomy" class="taxonomy">
                 <p v-if="result.categories?.length" class="tax-line">
-                  <span class="tax-key">Category:</span>
+                  <span class="tax-key">{{ t('watch.category') }}</span>
                   <span class="tax-val">{{ result.categories.map(c => c.label).join(' · ') }}</span>
                 </p>
                 <p v-if="result.actors?.length" class="tax-line">
-                  <span class="tax-key">Actress:</span>
+                  <span class="tax-key">{{ t('watch.actress') }}</span>
                   <button
                     v-for="a in result.actors" :key="a.slug"
                     class="tax-chip actress" @click="openActress(a.slug)"
                   >{{ a.name }}</button>
                 </p>
                 <p v-if="result.tags?.length" class="tax-line">
-                  <span class="tax-key">Tags:</span>
+                  <span class="tax-key">{{ t('watch.tags') }}</span>
                   <button
                     v-for="t in result.tags" :key="t.slug"
                     class="tax-chip" @click="goFilter('tag', t.slug)"
@@ -83,13 +78,13 @@
 
               <!-- Auto-retry notice -->
               <p v-if="autoRetrying" class="retry-notice">
-                Server {{ activeMirrorIndex + 1 }} failed — trying Server {{ activeMirrorIndex + 2 }}…
+                {{ t('watch.serverFailed', { a: activeMirrorIndex + 1, b: activeMirrorIndex + 2 }) }}
               </p>
 
               <div class="meta-actions">
                 <!-- Mirror server buttons -->
                 <div v-if="result.mirrors && result.mirrors.length > 1" class="mirrors">
-                  <span class="mirrors-label">Servers</span>
+                  <span class="mirrors-label">{{ t('watch.servers') }}</span>
                   <button
                     v-for="(m, i) in result.mirrors"
                     :key="m"
@@ -106,15 +101,15 @@
                     <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
                     <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>
                   </svg>
-                  {{ shareCopied ? 'Link Copied!' : 'Share' }}
+                  {{ shareCopied ? t('watch.linkCopied') : t('watch.share') }}
                 </button>
               </div>
 
               <!-- Auto-play next -->
               <div v-if="hasNextVideo" class="autoplay-row">
-                <span class="autoplay-label">Next:</span>
+                <span class="autoplay-label">{{ t('watch.next') }}</span>
                 <span class="autoplay-title">{{ nextVideo?.title }}</span>
-                <button class="autoplay-skip" @click="goToNext">Play now</button>
+                <button class="autoplay-skip" @click="goToNext">{{ t('watch.playNow') }}</button>
               </div>
             </div>
 
@@ -130,7 +125,7 @@
 
           <!-- ④ Related videos -->
           <div v-if="relatedVideos.length > 0" class="related-section">
-            <h3 class="related-title">ဆင်တူသော ဗီဒီယိုများ</h3>
+            <h3 class="related-title">{{ t('watch.related') }}</h3>
             <div class="related-list">
               <div
                 v-for="v in relatedVideos"
@@ -152,6 +147,9 @@
           <Ad300x250 v-else />
         </aside>
       </div>
+
+      <!-- Bottom native banner ad -->
+      <NativeBanner1 />
     </main>
   </div>
 </template>
@@ -161,6 +159,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import VideoPlayer from '../components/VideoPlayer.vue'
 import VideoCard from '../components/VideoCard.vue'
+import HeaderTools from '../components/HeaderTools.vue'
+import { t } from '../utils/i18n'
 import NativeBanner1 from '../components/ads/NativeBanner_1.vue'
 import Ad300x250 from '../components/ads/300x250_1.vue'
 import { apiFetch } from '../utils/apiFetch'
@@ -343,13 +343,13 @@ async function fetchVideo() {
   try {
     const res  = await apiFetch(`/api/video-url?id=${encodeURIComponent(meta!.videoId)}`)
     const data = await res.json()
-    if (!res.ok) throw new Error(data.error ?? 'Failed to fetch video')
+    if (!res.ok) throw new Error(data.error ?? t('watch.failedFetch'))
     result.value    = data as VideoResult
     activeUrl.value = data.url
     saveToHistory()
     fetchRelated()
   } catch (e) {
-    fetchError.value = e instanceof Error ? e.message : 'Unknown error'
+    fetchError.value = e instanceof Error ? e.message : t('common.unknownError')
   } finally {
     fetching.value = false
   }
@@ -359,14 +359,14 @@ onMounted(fetchVideo)
 </script>
 
 <style scoped>
-.watch-app { min-height: 100vh; display: flex; flex-direction: column; background: #0f172a; }
+.watch-app { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
 
 /* Header */
-.header { background: rgba(15,23,42,0.95); border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 50; }
+.header { background: rgb(var(--bg-rgb) / 0.95); border-bottom: 1px solid var(--surface); position: sticky; top: 0; z-index: 50; }
 .header-inner { max-width: 1400px; margin: 0 auto; padding: 0 20px; height: 56px; display: flex; align-items: center; gap: 20px; }
-.back-btn { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; border: 1px solid #334155; background: transparent; color: #94a3b8; font-size: .875rem; cursor: pointer; transition: all .15s; }
-.back-btn:hover { color: #f1f5f9; border-color: #6366f1; }
-.logo { display: flex; align-items: center; gap: 8px; font-size: .95rem; font-weight: 700; color: #f1f5f9; text-decoration: none; }
+.back-btn { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-3); font-size: .875rem; cursor: pointer; transition: all .15s; }
+.back-btn:hover { color: var(--text); border-color: var(--accent); }
+.logo { display: flex; align-items: center; gap: 8px; font-size: .95rem; font-weight: 700; color: var(--text); text-decoration: none; }
 
 /* Main layout */
 .main { max-width: 1400px; margin: 0 auto; padding: 20px 20px 80px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
@@ -379,58 +379,58 @@ onMounted(fetchVideo)
 .player-wrap { background: #000; border-radius: 10px; overflow: hidden; }
 
 .video-meta { padding: 16px 0 20px; display: flex; flex-direction: column; gap: 14px; }
-.video-title { margin: 0; font-size: 1.1rem; font-weight: 600; color: #f1f5f9; line-height: 1.4; }
+.video-title { margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--text); line-height: 1.4; }
 
 .retry-notice { margin: 0; font-size: .8rem; color: #fbbf24; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.2); padding: 6px 12px; border-radius: 6px; }
 
-.taxonomy { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; }
+.taxonomy { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: var(--bg); border: 1px solid var(--surface); border-radius: 8px; }
 .tax-line { margin: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: .82rem; }
-.tax-key { color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: .72rem; }
-.tax-val { color: #cbd5e1; }
-.tax-chip { padding: 3px 10px; border-radius: 999px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: .78rem; cursor: pointer; transition: all .15s; }
-.tax-chip:hover { border-color: #6366f1; color: #f1f5f9; }
-.tax-chip.actress { color: #818cf8; border-color: rgba(99,102,241,.4); background: rgba(99,102,241,.12); }
-.tax-chip.actress:hover { background: rgba(99,102,241,.25); }
+.tax-key { color: var(--text-4); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: .72rem; }
+.tax-val { color: var(--text-2); }
+.tax-chip { padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-3); font-size: .78rem; cursor: pointer; transition: all .15s; }
+.tax-chip:hover { border-color: var(--accent); color: var(--text); }
+.tax-chip.actress { color: var(--accent-text); border-color: rgb(var(--accent-rgb) / .4); background: rgb(var(--accent-rgb) / .12); }
+.tax-chip.actress:hover { background: rgb(var(--accent-rgb) / .25); }
 
 .meta-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
 .mirrors { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; }
-.mirrors-label { font-size: .75rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; }
-.mirror-btn { padding: 5px 14px; border-radius: 5px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-size: .8rem; cursor: pointer; transition: all .15s; }
-.mirror-btn:hover { border-color: #6366f1; color: #f1f5f9; }
-.mirror-btn.active { background: #6366f1; border-color: #6366f1; color: #fff; }
+.mirrors-label { font-size: .75rem; color: var(--text-4); text-transform: uppercase; letter-spacing: .05em; }
+.mirror-btn { padding: 5px 14px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); color: var(--text-3); font-size: .8rem; cursor: pointer; transition: all .15s; }
+.mirror-btn:hover { border-color: var(--accent); color: var(--text); }
+.mirror-btn.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 
-.share-btn { display: flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 6px; border: 1px solid #334155; background: transparent; color: #94a3b8; font-size: .8rem; cursor: pointer; white-space: nowrap; transition: all .15s; flex-shrink: 0; }
-.share-btn:hover { border-color: #6366f1; color: #f1f5f9; }
+.share-btn { display: flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-3); font-size: .8rem; cursor: pointer; white-space: nowrap; transition: all .15s; flex-shrink: 0; }
+.share-btn:hover { border-color: var(--accent); color: var(--text); }
 
 /* Related videos */
 .related-section { display: flex; flex-direction: column; gap: 10px; }
-.related-title { margin: 0; font-size: .8rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .05em; }
+.related-title { margin: 0; font-size: .8rem; font-weight: 600; color: var(--text-4); text-transform: uppercase; letter-spacing: .05em; }
 .related-list { display: flex; flex-direction: column; gap: 10px; }
 .related-card { display: flex; gap: 10px; cursor: pointer; border-radius: 6px; padding: 4px; transition: background .15s; }
-.related-card:hover { background: #1e293b; }
-.related-thumb-wrap { position: relative; width: 100px; min-width: 100px; height: 56px; border-radius: 5px; overflow: hidden; background: #1e293b; }
+.related-card:hover { background: var(--surface); }
+.related-thumb-wrap { position: relative; width: 100px; min-width: 100px; height: 56px; border-radius: 5px; overflow: hidden; background: var(--surface); }
 .related-thumb { width: 100%; height: 100%; object-fit: cover; }
-.related-thumb-placeholder { width: 100%; height: 100%; background: #334155; }
-.related-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.45); opacity: 0; transition: opacity .2s; color: #fff; }
+.related-thumb-placeholder { width: 100%; height: 100%; background: var(--border); }
+.related-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.45); opacity: 0; transition: opacity .2s; color: var(--on-accent); }
 .related-card:hover .related-play-overlay { opacity: 1; }
-.related-card-title { margin: 0; font-size: .78rem; color: #cbd5e1; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.related-card-title { margin: 0; font-size: .78rem; color: var(--text-2); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-.autoplay-row { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: #1e293b; border-radius: 8px; border: 1px solid #334155; flex-wrap: wrap; }
-.autoplay-label { font-size: .75rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
-.autoplay-title { font-size: .85rem; color: #cbd5e1; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.autoplay-skip { padding: 4px 12px; border-radius: 5px; border: 1px solid #6366f1; background: transparent; color: #6366f1; font-size: .78rem; cursor: pointer; white-space: nowrap; transition: all .15s; }
-.autoplay-skip:hover { background: #6366f1; color: #fff; }
+.autoplay-row { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--surface); border-radius: 8px; border: 1px solid var(--border); flex-wrap: wrap; }
+.autoplay-label { font-size: .75rem; color: var(--text-4); text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+.autoplay-title { font-size: .85rem; color: var(--text-2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.autoplay-skip { padding: 4px 12px; border-radius: 5px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-size: .78rem; cursor: pointer; white-space: nowrap; transition: all .15s; }
+.autoplay-skip:hover { background: var(--accent); color: var(--on-accent); }
 
 .sidebar { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 76px; }
 
 /* State boxes */
-.state-box { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 16px; background: #1e293b; border-radius: 10px; color: #94a3b8; }
+.state-box { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 16px; background: var(--surface); border-radius: 10px; color: var(--text-3); }
 .error-box { color: #f87171; }
-.spinner-ring { width: 40px; height: 40px; border: 3px solid rgba(99,102,241,.3); border-top-color: #6366f1; border-radius: 50%; animation: spin .8s linear infinite; }
+.spinner-ring { width: 40px; height: 40px; border: 3px solid rgb(var(--accent-rgb) / .3); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.retry-btn { padding: 8px 20px; border-radius: 6px; border: 1px solid #6366f1; background: transparent; color: #6366f1; cursor: pointer; font-size: .875rem; transition: all .15s; }
-.retry-btn:hover { background: #6366f1; color: #fff; }
+.retry-btn { padding: 8px 20px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; font-size: .875rem; transition: all .15s; }
+.retry-btn:hover { background: var(--accent); color: var(--on-accent); }
 
 /* Mobile */
 @media (max-width: 768px) {

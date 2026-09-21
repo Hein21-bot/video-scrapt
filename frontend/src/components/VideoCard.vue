@@ -14,7 +14,7 @@
           <path d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9A2.25 2.25 0 004.5 18.75z"/>
         </svg>
       </div>
-      <span v-if="isNew" class="new-badge">NEW</span>
+      <span v-if="isNew" class="new-badge">{{ t('card.new') }}</span>
       <div class="play-overlay">
         <div class="play-icon">
           <svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import { t } from '../utils/i18n'
 import { ref } from 'vue'
 
 defineProps<{
@@ -52,7 +53,7 @@ const imgError = ref(false)
 .thumb-wrap {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: #1e293b;
+  background: var(--surface);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -71,8 +72,8 @@ const imgError = ref(false)
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1e293b, #334155);
-  color: #475569;
+  background: linear-gradient(135deg, var(--surface), var(--border));
+  color: var(--border-strong);
 }
 
 .play-overlay {
@@ -90,11 +91,11 @@ const imgError = ref(false)
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(99, 102, 241, 0.9);
+  background: rgb(var(--accent-rgb) / 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--on-accent);
   transform: scale(0.85);
   transition: transform 0.2s;
 }
@@ -115,8 +116,8 @@ const imgError = ref(false)
   position: absolute;
   top: 6px;
   left: 6px;
-  background: #6366f1;
-  color: #fff;
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: .65rem;
   font-weight: 700;
   letter-spacing: .06em;
@@ -128,7 +129,7 @@ const imgError = ref(false)
 .card-title {
   margin: 0;
   font-size: 0.82rem;
-  color: #cbd5e1;
+  color: var(--text-2);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Starts/stops all 5 NightMM services on fixed ports that stay out of the way
+# Starts/stops all 5 ChitNya services on fixed ports that stay out of the way
 # of other projects on this Mac (which tend to grab 8080/8081/5173).
 #
 #   ./run.sh            start everything

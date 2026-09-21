@@ -19,6 +19,9 @@ type AppConfig struct {
 	// BridgeURL points at the local Telegram bridge service (bridge/server.py).
 	// Empty (the default, and in production) disables the "Add from Telegram" UI.
 	BridgeURL string
+	// KeepAliveKey guards POST /keepalive (the weekly "pin" of manually-added videos).
+	// Empty disables the endpoint.
+	KeepAliveKey string
 }
 
 var C AppConfig
@@ -37,6 +40,7 @@ func Load() {
 		AdminPort:     getEnv("ADMIN_PORT", "8081"),
 		CORSOrigins:   getEnv("CORS_ORIGINS", ""),
 		BridgeURL:     getEnv("BRIDGE_URL", ""),
+		KeepAliveKey:  getEnv("KEEPALIVE_KEY", ""),
 	}
 	log.Printf("[config] loaded — mongo=%s db=%s", C.MongoURI, C.MongoDB)
 }

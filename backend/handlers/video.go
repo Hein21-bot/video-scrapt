@@ -134,19 +134,31 @@ func HandleSearch(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// Match the title, the slug/code in the page URL, or an actress name —
+	// Match the title, the slug/code in the page URL, an actress name, or a tag/genre —
 	// spaces and dashes are interchangeable so "xjx 720" finds "XJX-720".
 	parts := regexp.MustCompile(`[\s-]+`).Split(q, -1)
 	for i, p := range parts {
 		parts[i] = regexp.QuoteMeta(p)
 	}
 	rx := strings.Join(parts, `[\s-]?`)
+	filter := bson.M{"$or": bson.A{
+		bson.M{"title": bson.M{"$regex": rx, "$options": "i"}},
+		bson.M{"page_url": bson.M{"$regex": rx, "$options": "i"}},
+		bson.M{"actors": bson.M{"$regex": rx, "$options": "i"}},
+		bson.M{"tags": bson.M{"$regex": rx, "$options": "i"}},
+		bson.M{"categories": bson.M{"$regex": rx, "$options": "i"}},
+	}}
+	// Optional: keep results inside the channel the visitor is browsing.
+	if site := c.Query("site"); site != "" {
+		internal, ok := toInternalSite(site)
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid site"})
+			return
+		}
+		filter["site"] = internal
+	}
 	cursor, err := db.ListingCol.Find(ctx,
-		bson.M{"$or": bson.A{
-			bson.M{"title": bson.M{"$regex": rx, "$options": "i"}},
-			bson.M{"page_url": bson.M{"$regex": rx, "$options": "i"}},
-			bson.M{"actors": bson.M{"$regex": rx, "$options": "i"}},
-		}},
+		filter,
 		options.Find().SetLimit(40).SetSort(bson.D{{Key: "synced_at", Value: -1}}),
 	)
 	if err != nil {

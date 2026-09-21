@@ -1,0 +1,12 @@
+name = "chitnya-keepalive"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+# Every 13 minutes: keeps Render awake (its free plan sleeps after 15 idle minutes).
+# Mondays 03:00 UTC: pins every Telegram-uploaded video (see src/index.js).
+[triggers]
+crons = ["*/13 * * * *", "0 3 * * 1"]
+
+[vars]
+# The Render API's health endpoint. Change it here if the Render URL ever changes.
+HEALTH_URL = "https://video-scrapt.onrender.com/health"

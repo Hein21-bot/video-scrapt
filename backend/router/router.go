@@ -31,6 +31,11 @@ func SetupAdmin() *gin.Engine {
 func registerPublic(r *gin.Engine) {
 	r.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"ok": true}) })
 
+	// Not under /api, so the Cloudflare proxy never forwards it — only the keep-alive
+	// Worker (which holds KEEPALIVE_KEY) can reach it.
+	r.POST("/keepalive", handlers.HandleKeepAlive)
+	r.GET("/keepalive", handlers.HandleKeepAliveStatus)
+
 	api := r.Group("/api")
 	api.Use(middleware.APITokenAuth())
 	{

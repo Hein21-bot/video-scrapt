@@ -1,3 +1,47 @@
+/* Theme tokens. Default is dark (orange on near-black); [data-theme="light"]
+   overrides them. Every component uses these instead of literal colors. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-rgb: 0 0 0;
+  --surface: #1a1a1a;
+  --surface-2: #262626;
+  --border-soft: #1f1f1f;
+  --border: #2f2f2f;
+  --border-strong: #454545;
+  --text: #ffffff;
+  --text-body: #e8e8e8;
+  --text-2: #cfcfcf;
+  --text-3: #a0a0a0;
+  --text-4: #737373;
+  --accent: #ff9000;
+  --accent-rgb: 255 144 0;
+  --accent-hover: #ffa31a;
+  --accent-text: #ffa31a;
+  --on-accent: #000000;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f3f3f3;
+  --bg-rgb: 243 243 243;
+  --surface: #ffffff;
+  --surface-2: #e9e9e9;
+  --border-soft: #e4e4e4;
+  --border: #d6d6d6;
+  --border-strong: #b5b5b5;
+  --text: #111111;
+  --text-body: #1f1f1f;
+  --text-2: #3a3a3a;
+  --text-3: #666666;
+  --text-4: #8a8a8a;
+  --accent: #ff9000;
+  --accent-rgb: 255 144 0;
+  --accent-hover: #e07f00;
+  --accent-text: #c96f00;
+  --on-accent: #000000;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -5,7 +49,17 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--bg);
+  color: var(--text-body);
   -webkit-font-smoothing: antialiased;
 }
+
+/* Wide desktops: narrow the content column so the side ad slots (300px each) fit. */
+@media (min-width: 1912px) {
+  .main, .header-inner, .header-top-inner, .header-tabs-inner, .sub-header-inner {
+    max-width: 1280px !important;
+  }
+}
+
+/* Header logo (the ChitNya badge, cropped round) */
+.logo-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; display: block; }

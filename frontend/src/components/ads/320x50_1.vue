@@ -28,7 +28,7 @@ onMounted(() => {
   z-index: 50;
   display: flex;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.9);
+  background: rgb(var(--bg-rgb) / 0.9);
   backdrop-filter: blur(4px);
 }
 </style>

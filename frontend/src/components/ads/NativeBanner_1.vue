@@ -38,4 +38,11 @@ onUnmounted(() => {
 
 <style scoped>
 .native-wrap { width: 100%; min-height: 50px; }
+
+/* The network renders a 2x2 grid of large tiles (~480px tall on a phone), which
+   pushes the videos off-screen. Scale the whole widget down on phones instead of
+   clipping it, so no tile is cut in half. Raise/lower the zoom to taste. */
+@media (max-width: 640px) {
+  .native-wrap { zoom: 0.6; }
+}
 </style>

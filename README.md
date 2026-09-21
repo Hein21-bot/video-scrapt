@@ -1,4 +1,4 @@
-# NightMM — video aggregator
+# ChitNya — video aggregator
 
 Split into a **public** half (deployed) and an **admin** half (local only).
 

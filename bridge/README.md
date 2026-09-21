@@ -70,3 +70,9 @@ Free hosts delete files with no views for ~120 days. Ping them:
   keep ~2× the largest file free on disk.
 - `BRIDGE_URL` unset (production / no bridge running) ⇒ the admin section hides,
   everything else works normally.
+
+
+## Keep-alive on the deployed site
+
+`keepalive.py` above is the manual/local version. The deployed site pins every
+Telegram-uploaded video automatically every week — see `keepalive-worker/README.md`.
