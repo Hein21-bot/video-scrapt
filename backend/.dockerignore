@@ -1,0 +1,7 @@
+.env
+*.db
+/server
+/video-scraper
+*.log
+.DS_Store
+.git

@@ -1,0 +1,22 @@
+# deps / build
+node_modules/
+dist/
+*.log
+
+# secrets & local state — NEVER commit
+**/.env
+**/.env.local
+bridge/config.ini
+bridge/*.session
+bridge/*.session-journal
+bridge/.venv/
+bridge/keepalive.log
+bridge/__pycache__/
+
+# local db / caches
+backend/video_cache.db
+backend/server
+backend/cmd/c/
+
+.run/
+.DS_Store
