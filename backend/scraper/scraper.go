@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -16,6 +17,16 @@ import (
 )
 
 const chromeUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+// IframeMode reports whether video-host embeds should be handed to the browser
+// as an <iframe> instead of being resolved to an HLS link server-side. StreamHG
+// and StreamWish-family links are bound to the IP that requested them, so a link
+// resolved by a hosted server (Render sets RENDER) returns 403 for the viewer.
+// In an iframe the viewer's own browser talks to the host, so the IP matches.
+// Locally the server and viewer share an IP, so resolving server-side is fine.
+func IframeMode() bool {
+	return os.Getenv("PLAY_IFRAME") == "1" || os.Getenv("RENDER") != ""
+}
 
 func siteKey(pageURL string) string {
 	switch {
@@ -294,21 +305,25 @@ func scrapeStreamHG(pageURL string) (*VideoResult, error) {
 	}
 
 	// Locate the embed id — prefer an <iframe> inside the player, then anywhere.
-	id := ""
+	id, embedURL := "", ""
 	doc.Find(".video-player iframe[src], .responsive-player iframe[src], iframe[src]").EachWithBreak(func(_ int, s *goquery.Selection) bool {
 		if src, _ := s.Attr("src"); reEmbedID.MatchString(src) {
-			id = reEmbedID.FindStringSubmatch(src)[1]
+			m := reEmbedID.FindStringSubmatch(src)
+			id, embedURL = m[1], m[0]
 			return false
 		}
 		return true
 	})
 	if id == "" {
 		if m := reEmbedID.FindStringSubmatch(rawHTML); m != nil {
-			id = m[1]
+			id, embedURL = m[1], m[0]
 		}
 	}
 	if id == "" {
 		return nil, fmt.Errorf("streamhg: no embed iframe on page")
+	}
+	if IframeMode() {
+		return &VideoResult{URL: embedURL, Type: "iframe"}, nil
 	}
 
 	// Fetch the StreamHG backend embed page (a Referer is required, any value works).

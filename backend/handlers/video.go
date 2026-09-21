@@ -383,6 +383,9 @@ func resolveManualURL(raw string) (playURL, playType, thumb string) {
 	case strings.Contains(low, ".mp4"):
 		return raw, "mp4", ""
 	case scraper.EmbedHostRe.MatchString(raw):
+		if scraper.IframeMode() {
+			return scraper.NormalizeEmbedURL(raw), "iframe", ""
+		}
 		if r, err := scraper.ScrapeEmbed(raw); err == nil {
 			return r.URL, "hls", r.Thumb
 		}
