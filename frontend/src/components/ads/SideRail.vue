@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
-import { SIDE_WIDTH, SIDE_HEIGHT } from './adKeys'
+import { AD_HOST, SIDE_WIDTH, SIDE_HEIGHT } from './adKeys'
 
 const props = defineProps<{ side: 'left' | 'right'; adKey: string }>()
 
@@ -18,7 +18,7 @@ const frame = ref<HTMLIFrameElement | null>(null)
 
 // Only mount (and so only load the ad) when the slot is actually visible —
 // ad networks penalise ads that load while hidden.
-const mq = window.matchMedia('(min-width: 1912px)')
+const mq = window.matchMedia('(min-width: 1780px)')
 const wide = ref(mq.matches)
 const onChange = (e: MediaQueryListEvent) => { wide.value = e.matches }
 
@@ -27,7 +27,7 @@ function load() {
   // An isolated iframe per rail, so two rails never fight over the network's global atOptions.
   frame.value.srcdoc = `<!DOCTYPE html><html><head>
 <script>atOptions={'key':'${props.adKey}','format':'iframe','height':${HEIGHT},'width':${WIDTH},'params':{}}<\/script>
-<script data-cfasync="false" src="https://www.highperformanceformat.com/${props.adKey}/invoke.js"><\/script>
+<script data-cfasync="false" src="${AD_HOST}/${props.adKey}/invoke.js"><\/script>
 </head><body style="margin:0;padding:0;overflow:hidden;"></body></html>`
 }
 
@@ -40,25 +40,25 @@ onBeforeUnmount(() => mq.removeEventListener('change', onChange))
 </script>
 
 <style scoped>
-/* Hidden unless the screen is wide enough: on >= 1912px the content column is
-   narrowed to 1280px (see style.css), leaving 320px each side for a 300px ad. */
+/* Hidden unless the screen is wide enough: the 1400px content column leaves room for a
+   160px ad plus a 16px gap on each side from 1780px up. */
 .rail { display: none; }
 
-@media (min-width: 1912px) {
+@media (min-width: 1780px) {
   .rail {
     display: block;
     position: fixed;
     top: 96px;
-    width: 300px;
+    width: 160px;
     z-index: 5;
   }
-  .rail--left  { right: calc(50% + 656px); }
-  .rail--right { left:  calc(50% + 656px); }
+  .rail--left  { right: calc(50% + 716px); }
+  .rail--right { left:  calc(50% + 716px); }
 }
 
 .rail-frame { display: block; border: none; }
 .rail-placeholder {
-  width: 300px; height: 250px;
+  width: 160px; height: 600px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center; font-size: .8rem; line-height: 1.6;
   color: var(--text-4);

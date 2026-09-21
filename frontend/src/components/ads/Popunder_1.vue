@@ -4,17 +4,17 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
+import { ENABLE_POPUNDER, POPUNDER_SRC } from './adKeys'
 
 const SCRIPT_ID  = 'popunder-1'
-const SCRIPT_SRC = 'https://pl29751081.effectivecpmnetwork.com/52/57/17/52571775184d099cc6151ae631218f5a.js'
 
 onMounted(() => {
-  if (document.getElementById(SCRIPT_ID)) return
+  if (!ENABLE_POPUNDER || document.getElementById(SCRIPT_ID)) return
   const script = document.createElement('script')
   script.id    = SCRIPT_ID
   script.async = true
   script.setAttribute('data-cfasync', 'false')
-  script.src   = SCRIPT_SRC
+  script.src   = POPUNDER_SRC
   document.head.appendChild(script)
 })
 

@@ -1,17 +1,18 @@
 <template>
-  <div class="ad-sticky-wrap">
+  <div v-if="KEY_320x50" class="ad-sticky-wrap">
     <iframe ref="adFrame" width="320" height="50" frameborder="0" scrolling="no" style="border:none;display:block;"></iframe>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { AD_HOST, KEY_320x50 } from './adKeys'
 
 const adFrame = ref<HTMLIFrameElement | null>(null)
 
 const html = `<!DOCTYPE html><html><head>
-<script>atOptions={'key':'f6cf14a18159c586f8f45e899a8002af','format':'iframe','height':50,'width':320,'params':{}}<\/script>
-<script data-cfasync="false" src="https://www.highperformanceformat.com/f6cf14a18159c586f8f45e899a8002af/invoke.js"><\/script>
+<script>atOptions={'key':'${KEY_320x50}','format':'iframe','height':50,'width':320,'params':{}}<\/script>
+<script data-cfasync="false" src="${AD_HOST}/${KEY_320x50}/invoke.js"><\/script>
 </head><body style="margin:0;padding:0;overflow:hidden;"></body></html>`
 
 onMounted(() => {

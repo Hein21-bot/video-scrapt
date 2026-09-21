@@ -103,6 +103,11 @@
                   </svg>
                   {{ shareCopied ? t('watch.linkCopied') : t('watch.share') }}
                 </button>
+
+                <!-- Smartlink: an honest, clearly labelled ad link that opens in a new tab -->
+                <a v-if="SMARTLINK_URL" class="sponsored-btn" :href="SMARTLINK_URL" target="_blank" rel="sponsored noopener noreferrer">
+                  {{ t('watch.sponsored') }}
+                </a>
               </div>
 
               <!-- Auto-play next -->
@@ -150,6 +155,7 @@
 
       <!-- Bottom native banner ad -->
       <NativeBanner1 />
+      <Ad728x90 />
     </main>
   </div>
 </template>
@@ -162,6 +168,8 @@ import VideoCard from '../components/VideoCard.vue'
 import HeaderTools from '../components/HeaderTools.vue'
 import { t } from '../utils/i18n'
 import NativeBanner1 from '../components/ads/NativeBanner_1.vue'
+import Ad728x90 from '../components/ads/Ad728x90.vue'
+import { SMARTLINK_URL } from '../components/ads/adKeys'
 import Ad300x250 from '../components/ads/300x250_1.vue'
 import { apiFetch } from '../utils/apiFetch'
 
@@ -403,6 +411,8 @@ onMounted(fetchVideo)
 
 .share-btn { display: flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-3); font-size: .8rem; cursor: pointer; white-space: nowrap; transition: all .15s; flex-shrink: 0; }
 .share-btn:hover { border-color: var(--accent); color: var(--text); }
+.sponsored-btn { display: inline-flex; align-items: center; padding: 5px 14px; border-radius: 6px; border: 1px dashed var(--border-strong); color: var(--text-4); font-size: .75rem; text-decoration: none; white-space: nowrap; flex-shrink: 0; transition: all .15s; }
+.sponsored-btn:hover { border-color: var(--accent); color: var(--accent-text); }
 
 /* Related videos */
 .related-section { display: flex; flex-direction: column; gap: 10px; }

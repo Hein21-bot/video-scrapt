@@ -60,6 +60,7 @@
       </template>
 
       <NativeBanner1 v-if="!loading && videos.length > 0" />
+      <Ad728x90 v-if="!loading && videos.length > 0" />
     </main>
   </div>
 </template>
@@ -71,6 +72,7 @@ import VideoCard from '../components/VideoCard.vue'
 import HeaderTools from '../components/HeaderTools.vue'
 import { t } from '../utils/i18n'
 import NativeBanner1 from '../components/ads/NativeBanner_1.vue'
+import Ad728x90 from '../components/ads/Ad728x90.vue'
 import { apiFetch } from '../utils/apiFetch'
 
 interface VideoItem { id: string; title: string; thumbnail: string; site: string; synced_at?: string }

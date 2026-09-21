@@ -1,24 +1,21 @@
 <template>
   <div class="ad-300-wrap">
-    <div ref="adContainer"></div>
+    <iframe ref="frame" width="300" height="250" frameborder="0" scrolling="no" style="border:none;display:block;" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { AD_HOST, KEY_300x250 } from './adKeys'
 
-const adContainer = ref<HTMLDivElement | null>(null)
+const frame = ref<HTMLIFrameElement | null>(null)
 
 onMounted(() => {
-  if (!adContainer.value) return
-
-  const cfg  = document.createElement('script')
-  cfg.text   = `atOptions={'key':'abe392b1e82cb06276cfba7fd8c1eef2','format':'iframe','height':250,'width':300,'params':{}};`
-  adContainer.value.appendChild(cfg)
-
-  const invoke = document.createElement('script')
-  invoke.src   = 'https://www.highperformanceformat.com/abe392b1e82cb06276cfba7fd8c1eef2/invoke.js'
-  adContainer.value.appendChild(invoke)
+  if (!frame.value || !KEY_300x250) return
+  frame.value.srcdoc = `<!DOCTYPE html><html><head>
+<script>atOptions={'key':'${KEY_300x250}','format':'iframe','height':250,'width':300,'params':{}}<\/script>
+<script data-cfasync="false" src="${AD_HOST}/${KEY_300x250}/invoke.js"><\/script>
+</head><body style="margin:0;padding:0;overflow:hidden;"></body></html>`
 })
 </script>
 

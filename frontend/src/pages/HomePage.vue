@@ -156,6 +156,7 @@
         </template>
 
         <NativeBanner1 v-if="!loading && videos.length > 0" />
+        <Ad728x90 v-if="!loading && videos.length > 0" />
       </template>
     </main>
   </div>
@@ -167,6 +168,7 @@ import { useRouter, useRoute, RouterLink } from 'vue-router'
 import VideoCard from '../components/VideoCard.vue'
 import HeaderTools from '../components/HeaderTools.vue'
 import NativeBanner1 from '../components/ads/NativeBanner_1.vue'
+import Ad728x90 from '../components/ads/Ad728x90.vue'
 import { apiFetch } from '../utils/apiFetch'
 import { t } from '../utils/i18n'
 

@@ -1,14 +1,14 @@
 <template>
-  <div v-if="isOwner" id="container-5157180e710ec7725ab3e794109d781b" class="native-wrap"></div>
+  <div v-if="isOwner" :id="`container-${NATIVE_KEY}`" class="native-wrap"></div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { NATIVE_KEY, NATIVE_SRC } from './adKeys'
 
 let activeInstance: symbol | null = null
 
 const SCRIPT_ID  = 'native-banner-1'
-const SCRIPT_SRC = 'https://pl29751079.effectivecpmnetwork.com/5157180e710ec7725ab3e794109d781b/invoke.js'
 
 const id      = Symbol()
 const isOwner = ref(false)
@@ -23,7 +23,7 @@ onMounted(() => {
   script.id    = SCRIPT_ID
   script.async = true
   script.setAttribute('data-cfasync', 'false')
-  script.src   = SCRIPT_SRC
+  script.src   = NATIVE_SRC
   document.head.appendChild(script)
 })
 
