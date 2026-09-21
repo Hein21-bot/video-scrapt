@@ -35,7 +35,7 @@ You also need accounts on: **GitHub**, **MongoDB Atlas**, **Render**, **Cloudfla
 
 1. Go to <https://cloud.mongodb.com> → sign up → **Create** a cluster.
 2. Pick **M0 (Free)**, any provider, a region close to your Render region
-   (Render free is `Oregon (US West)` → pick AWS `us-west-2`).
+   (use `Singapore` for both Render and Atlas → pick AWS `ap-southeast-1`; closest to Thailand/Myanmar).
 3. **Security → Database Access → Add New Database User**
    - username: `nightmm`  ·  password: *(generate, copy it)*
    - role: **Read and write to any database**

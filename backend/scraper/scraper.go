@@ -255,9 +255,9 @@ func ScrapeVideoURL(pageURL string) (*VideoResult, error) {
 		// The extraction is a live chain of third-party requests (3xchina →
 		// hglink → audinifer); a single hiccup shouldn't surface as a playback failure.
 		var err error
-		for attempt := 0; attempt < 3; attempt++ {
+		for attempt := 0; attempt < 2; attempt++ {
 			if attempt > 0 {
-				time.Sleep(time.Duration(attempt) * 400 * time.Millisecond)
+				time.Sleep(400 * time.Millisecond)
 			}
 			var r *VideoResult
 			if r, err = scrapeStreamHG(pageURL); err == nil {
@@ -288,7 +288,7 @@ const streamHGHost = "https://audinifer.com"
 var reEmbedID = regexp.MustCompile(`(?i)https?://[a-z0-9.-]+/(?:e|v|d|embed)/([a-z0-9]{8,16})`)
 
 func scrapeStreamHG(pageURL string) (*VideoResult, error) {
-	doc, rawHTML, err := fetchDoc(pageURL)
+	doc, rawHTML, err := fetchDocTimeout(pageURL, playFetchTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -315,7 +315,7 @@ func scrapeStreamHG(pageURL string) (*VideoResult, error) {
 	req, _ := http.NewRequest("GET", streamHGHost+"/e/"+id, nil)
 	req.Header.Set("User-Agent", chromeUA)
 	req.Header.Set("Referer", "https://hglink.to/")
-	resp, err := (&http.Client{Timeout: 20 * time.Second}).Do(req)
+	resp, err := (&http.Client{Timeout: playFetchTimeout}).Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("streamhg: embed fetch: %w", err)
 	}
@@ -505,7 +505,16 @@ func encodeBase(n, radix int) string {
 
 // ── HTTP helper ───────────────────────────────────────────────────────────────
 
+// playFetchTimeout is deliberately short: a viewer is waiting on it, and
+// datacenter IPs (Render) sometimes get throttled by the source sites — failing
+// fast lets them retry instead of staring at a spinner for a minute.
+const playFetchTimeout = 8 * time.Second
+
 func fetchDoc(pageURL string) (*goquery.Document, string, error) {
+	return fetchDocTimeout(pageURL, 20*time.Second)
+}
+
+func fetchDocTimeout(pageURL string, timeout time.Duration) (*goquery.Document, string, error) {
 	req, err := http.NewRequest("GET", pageURL, nil)
 	if err != nil {
 		return nil, "", err
@@ -515,7 +524,7 @@ func fetchDoc(pageURL string) (*goquery.Document, string, error) {
 	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
 	req.Header.Set("Referer", pageURL)
 
-	resp, err := (&http.Client{Timeout: 20 * time.Second}).Do(req)
+	resp, err := (&http.Client{Timeout: timeout}).Do(req)
 	if err != nil {
 		return nil, "", fmt.Errorf("request failed: %w", err)
 	}
