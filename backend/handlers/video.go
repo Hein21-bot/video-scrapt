@@ -82,7 +82,12 @@ func HandleVideoList(c *gin.Context) {
 		filter["actors"] = actor
 	}
 	if tag := strings.TrimSpace(c.Query("tag")); tag != "" {
-		filter["tags"] = tag
+		// Some channels (Muskuduu) have no per-video tags, only a genre
+		// (categories) — match either so its genre chips can filter too.
+		filter["$or"] = bson.A{
+			bson.M{"tags": tag},
+			bson.M{"categories": tag},
+		}
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -349,9 +354,9 @@ func HandleVideoURL(c *gin.Context) {
 			"type":       typ,
 			"mirrors":    mirrors,
 			"title":      doc.Title,
-			"categories": prettyList(doc.Categories),
+			"categories": categoryLabel(doc),
 			"actors":     actorRefs(doc.Actors),
-			"tags":       prettyList(doc.Tags),
+			"tags":       tagChips(doc),
 		})
 		return
 	}
@@ -375,9 +380,9 @@ func HandleVideoURL(c *gin.Context) {
 		"type":       result.Type,
 		"mirrors":    result.Mirrors,
 		"title":      doc.Title,
-		"categories": prettyList(doc.Categories),
+		"categories": categoryLabel(doc),
 		"actors":     actorRefs(doc.Actors),
-		"tags":       prettyList(doc.Tags),
+		"tags":       tagChips(doc),
 	})
 }
 
@@ -424,4 +429,24 @@ func prettyList(slugs []string) []gin.H {
 		out = append(out, gin.H{"slug": s, "label": prettyLabel(s)})
 	}
 	return out
+}
+
+// tagChips returns the clickable filter chips shown under a video. Most sites
+// (3xchina) have real per-video tags; Muskuduu only has a genre (Categories),
+// so that's promoted to fill the same role there.
+func tagChips(doc models.ListingDoc) []gin.H {
+	if len(doc.Tags) > 0 {
+		return prettyList(doc.Tags)
+	}
+	return prettyList(doc.Categories)
+}
+
+// categoryLabel is the plain (non-clickable) genre line. When Categories was
+// already promoted into tagChips above, it's left out here to avoid showing
+// the same thing twice.
+func categoryLabel(doc models.ListingDoc) []gin.H {
+	if len(doc.Tags) > 0 {
+		return prettyList(doc.Categories)
+	}
+	return nil
 }
