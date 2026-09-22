@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { NATIVE_KEY, NATIVE_SRC } from './adKeys'
+import { ENABLE_NATIVE_BANNER, NATIVE_KEY, NATIVE_SRC } from './adKeys'
 
 let activeInstance: symbol | null = null
 
@@ -14,7 +14,7 @@ const id      = Symbol()
 const isOwner = ref(false)
 
 onMounted(() => {
-  if (activeInstance !== null) return
+  if (!ENABLE_NATIVE_BANNER || activeInstance !== null) return
   activeInstance = id
   isOwner.value  = true
 

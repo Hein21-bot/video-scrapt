@@ -9,7 +9,11 @@ export const KEY_300x250 = 'e0829f8d97333ecb257fa73dc99212d3' // phone + desktop
 export const KEY_728x90  = 'e526e41c2a537a2ffb0826042427ac78' // desktop only
 export const KEY_160x600 = '0336c708e08e3ab9b07089c848fa6f1d' // desktop only: left/right of the page
 
-// Native banner (a script + a container whose id contains the key)
+// Native banner (a script + a container whose id contains the key).
+// Disabled: this format runs an unsandboxed <script> in the page (not an
+// iframe), so it can — and on this account did — render a full-page fake
+// "notification" overlay that hijacks clicks anywhere, same as the pop-under.
+export const ENABLE_NATIVE_BANNER = false
 export const NATIVE_KEY = '59da13e29228d10fd398f280685fd39d'
 export const NATIVE_SRC = `https://pl31448491.profitableratecpmnetwork.com/${NATIVE_KEY}/invoke.js`
 
