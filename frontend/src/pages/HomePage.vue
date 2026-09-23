@@ -183,8 +183,8 @@ interface VideoItem {
 // Main channel tabs — the two built-ins render immediately; admin-created
 // manual channels (see /api/channels) are appended once they load.
 const SITES = ref([
-  { key: 'channel2', label: 'Chinese AV' },
   { key: 'channel1', label: 'Myanmar' },
+  { key: 'channel2', label: 'Chinese AV' },
 ])
 async function loadChannels() {
   try {
@@ -194,7 +194,7 @@ async function loadChannels() {
   } catch { /* keep the built-in two */ }
 }
 
-const DEFAULT_SITE = 'channel2'
+const DEFAULT_SITE = 'channel1'
 
 // Myanmar channel language sub-tabs (all videos have MM subtitles; this splits
 // by the source video's language). Admin-managed — see /api/categories.

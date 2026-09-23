@@ -19,9 +19,9 @@ import (
 // they map to real code paths (an auto-scraper, the manual-video system).
 // Their key/site can't change, but the display label can — see builtinLabel.
 var builtinChannels = []struct{ Key, Label, Site string }{
-	{"channel2", "Chinese AV", "3xchina"},
 	{"channel1", "Myanmar", "manual"},
 	{"channel3", "Muskuduu", "muskuduu"},
+	{"channel2", "Chinese AV", "3xchina"},
 }
 
 // builtinLabel returns the admin-set override for a builtin channel's label,
